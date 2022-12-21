@@ -12,8 +12,8 @@
   - [x] Decode
 - [ ] YAML
   - [ ] ToJSON
-- [ ] Password
-  - [ ] Generator
+- [x] Password
+  - [x] Generator
 - [ ] URL
   - [ ] Encode
   - [ ] Decode
