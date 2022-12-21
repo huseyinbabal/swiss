@@ -50,6 +50,8 @@ brews:
       # Defaults to the default repository branch.
       branch: main
 
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+
     # Allows you to set a custom download strategy. Note that you'll need
     # to implement the strategy and add it to your tap repository.
     # Example: https://docs.brew.sh/Formula-Cookbook#specifying-the-download-strategy-explicitly
