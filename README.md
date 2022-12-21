@@ -4,7 +4,7 @@
 - [ ] JSON
   - [x] Beautify
   - [x] Uglify
-  - [ ] ToYAML
+  - [x] ToYAML
 - [x] Base64 
   - [x] Encode
   - [x] Decode

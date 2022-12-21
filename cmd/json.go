@@ -40,6 +40,18 @@ var jsonUglifyCmd = &cobra.Command{
 	},
 }
 
+var jsonToYamlCmd = &cobra.Command{
+	Use:   "toYAML",
+	Short: "Converts json to YAML",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		res, err := json.ToYAML(jsonValue)
+		if err != nil {
+			return err
+		}
+		return quick.Highlight(os.Stdout, res, "yaml", "terminal256", "monokai")
+	},
+}
+
 func init() {
 	jsonBeautifyCmd.Flags().StringVar(&jsonValue, "value", "", "JSON string")
 	err := jsonBeautifyCmd.MarkFlagRequired("value")
@@ -51,7 +63,13 @@ func init() {
 	if err != nil {
 		log.Fatalf("Please provide a valid json with --value parameter")
 	}
+	jsonToYamlCmd.Flags().StringVar(&jsonValue, "value", "", "JSON string")
+	err = jsonToYamlCmd.MarkFlagRequired("value")
+	if err != nil {
+		log.Fatalf("Please provide a valid json with --value parameter")
+	}
 	jsonCmd.AddCommand(jsonBeautifyCmd)
 	jsonCmd.AddCommand(jsonUglifyCmd)
+	jsonCmd.AddCommand(jsonToYamlCmd)
 	rootCmd.AddCommand(jsonCmd)
 }
