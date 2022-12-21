@@ -3,7 +3,7 @@
 ![](assets/swiss-layout.png)
 
 # Todo
-- [ ] JSON
+- [x] JSON
   - [x] Beautify
   - [x] Uglify
   - [x] ToYAML
@@ -14,6 +14,6 @@
   - [ ] ToJSON
 - [x] Password
   - [x] Generator
-- [ ] URL
-  - [ ] Encode
-  - [ ] Decode
+- [x] URL
+  - [x] Encode
+  - [x] Decode
