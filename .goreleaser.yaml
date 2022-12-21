@@ -76,3 +76,26 @@ brews:
     # SPDX identifier of your app's license.
     # Default is empty.
     license: "MIT"
+# .goreleaser.yaml
+announce:
+  discord:
+    # Whether its enabled or not.
+    # Defaults to false.
+    enabled: true
+
+    # Message template to use while publishing.
+    # Defaults to `{{ .ProjectName }} {{ .Tag }} is out! Check it out at {{ .ReleaseURL }}`
+    message_template: 'Swiss {{.Tag}} is out!'
+
+    # Set author of the embed.
+    # Defaults to `GoReleaser`
+    author: ''
+
+    # Color code of the embed. You have to use decimal numeral system, not hexadecimal.
+    # Defaults to `3888754` - the grey-ish from goreleaser
+    color: ''
+
+    # URL to an image to use as the icon for the embed.
+    # Defaults to `https://goreleaser.com/static/avatar.png`
+    icon_url: ''
+
