@@ -14,7 +14,7 @@ brew install swiss
 More installation options will come
 
 # Todo
-- [x] JSON
+- [ ] JSON
   - [x] Beautify
   - [x] Uglify
   - [x] ToYAML
