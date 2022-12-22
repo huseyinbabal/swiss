@@ -18,13 +18,37 @@ More installation options will come
   - [x] Beautify
   - [x] Uglify
   - [x] ToYAML
+  - [ ] ToXML
+  - [ ] ToCSV
+  - [ ] ToTSV
+  - [ ] Escape
+  - [ ] Unescape
+  - [ ] ToGoStruct
 - [x] Base64 
   - [x] Encode
   - [x] Decode
 - [ ] YAML
   - [ ] ToJSON
+  - [ ] ToXML
+  - [ ] ToCSV
 - [x] Password
   - [x] Generator
 - [x] URL
   - [x] Encode
   - [x] Decode
+- [ ] XML
+  - [ ] ToJSON
+  - [ ] ToCSV
+  - [ ] ToYAML
+  - [ ] Escape
+  - [ ] Unescape
+  - [ ] Beautify
+  - [ ] Uglify
+- [ ] RSS
+  - [ ] ToJSON
+- [ ] CSV
+  - [ ] ToJSON
+  - [ ] ToXML
+  - [ ] ToYAML
+  - [ ] Escape
+  - [ ] Unescape
