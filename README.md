@@ -28,7 +28,9 @@ More installation options will come
   - [x] Encode
   - [x] Decode
 - [ ] YAML
-  - [ ] ToJSON
+  - [x] Format
+  - [x] Beautify
+  - [x] ToJSON
   - [ ] ToXML
   - [ ] ToCSV
 - [x] Password
