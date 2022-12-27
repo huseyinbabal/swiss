@@ -39,9 +39,9 @@ More installation options will come
   - [x] Encode
   - [x] Decode
 - [ ] XML
-  - [ ] ToJSON
-  - [ ] ToCSV
-  - [ ] ToYAML
+  - [x] ToJSON
+  - [x] ToCSV
+  - [x] ToYAML
   - [ ] Escape
   - [ ] Unescape
   - [ ] Beautify
