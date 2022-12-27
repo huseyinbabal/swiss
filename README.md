@@ -2,7 +2,7 @@
 Swiss Army Knife for developers to handle daily basis utility requirements like `url encode`, `password generation`, `json escape`, `json to yaml conversion`
 without sending your data to online services. The main motivation is to handle those in your local to clear your concern.
 
-![](assets/swiss-layout.png)
+![](assets/swiss-layout-v2.png)
 
 ## Install
 
