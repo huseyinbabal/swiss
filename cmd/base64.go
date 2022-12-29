@@ -53,12 +53,12 @@ var base64DecodeCmd = &cobra.Command{
 }
 
 func init() {
-	base64EncodeCmd.Flags().StringVar(&b64Value, "value", "", "string")
+	base64EncodeCmd.Flags().StringVarP(&b64Value, "value", "v", "", "string")
 	err := base64EncodeCmd.MarkFlagRequired("value")
 	if err != nil {
 		log.Fatalf("Please provide a valid string with --value parameter")
 	}
-	base64DecodeCmd.Flags().StringVar(&b64Value, "value", "", "string")
+	base64DecodeCmd.Flags().StringVarP(&b64Value, "value", "v", "", "string")
 	err = base64DecodeCmd.MarkFlagRequired("value")
 	if err != nil {
 		log.Fatalf("Please provide a valid string with --value parameter")
