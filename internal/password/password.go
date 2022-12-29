@@ -65,5 +65,10 @@ func Generate(passwordLength int, includeUpperCase, includeNum, includeSymbol bo
 		}
 	}
 
-	return password.String(), nil
+	pswd := []rune(password.String())
+	rand.Shuffle(len(pswd), func(i, j int) {
+		pswd[i], pswd[j] = pswd[j], pswd[i]
+	})
+
+	return string(pswd), nil
 }
