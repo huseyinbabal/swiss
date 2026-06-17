@@ -1,5 +1,6 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
+version: 2
+
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -10,27 +11,28 @@ builds:
   - env:
       - CGO_ENABLED=0
     goos:
-#      - linux
-#      - windows
+      - linux
       - darwin
+    goarch:
+      - amd64
+      - arm64
 archives:
-  - replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
+  - name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
 checksum:
   name_template: 'checksums.txt'
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
 changelog:
   sort: asc
   filters:
     exclude:
       - '^docs:'
       - '^test:'
-# .goreleaser.yaml
 brews:
   -
     # Name template of the recipe
@@ -38,7 +40,7 @@ brews:
     name: swiss
 
     # GitHub/GitLab repository to push the formula to
-    tap:
+    repository:
       # Repository owner template. (templateable)
       owner: huseyinbabal
 
@@ -63,7 +65,7 @@ brews:
 
     # Folder inside the repository to put the formula.
     # Default is the root folder.
-    folder: Formula
+    directory: Formula
 
     # Your app's homepage.
     # Default is empty.
@@ -76,7 +78,6 @@ brews:
     # SPDX identifier of your app's license.
     # Default is empty.
     license: "MIT"
-# .goreleaser.yaml
 announce:
   discord:
     # Whether its enabled or not.
@@ -98,4 +99,3 @@ announce:
     # URL to an image to use as the icon for the embed.
     # Defaults to `https://goreleaser.com/static/avatar.png`
     icon_url: ''
-
