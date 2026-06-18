@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/alecthomas/chroma/quick"
+	"github.com/alecthomas/chroma/v2/quick"
 	"github.com/spf13/cobra"
 	"log"
 	"os"

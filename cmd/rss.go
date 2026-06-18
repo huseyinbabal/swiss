@@ -5,7 +5,7 @@ import (
 	"os"
 	"swiss/internal/rss"
 
-	"github.com/alecthomas/chroma/quick"
+	"github.com/alecthomas/chroma/v2/quick"
 	"github.com/spf13/cobra"
 )
 

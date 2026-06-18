@@ -6,7 +6,7 @@ import (
 	"os"
 	"swiss/internal/csv"
 
-	"github.com/alecthomas/chroma/quick"
+	"github.com/alecthomas/chroma/v2/quick"
 	"github.com/spf13/cobra"
 )
 
