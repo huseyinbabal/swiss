@@ -114,7 +114,7 @@ func init() {
 		xmlUnescapeCmd,
 	}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&xmlValue, "value", "", "XML string")
+		c.Flags().StringVarP(&xmlValue, "value", "v", "", "XML string")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide a valid xml with --value parameter")
 		}

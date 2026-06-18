@@ -140,7 +140,7 @@ func init() {
 		jsonUnescapeCmd,
 	}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&jsonValue, "value", "", "JSON string")
+		c.Flags().StringVarP(&jsonValue, "value", "v", "", "JSON string")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide a valid json with --value parameter")
 		}

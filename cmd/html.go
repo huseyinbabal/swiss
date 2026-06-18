@@ -54,7 +54,7 @@ var htmlStripCmd = &cobra.Command{
 func init() {
 	subCommands := []*cobra.Command{htmlEscapeCmd, htmlUnescapeCmd, htmlStripCmd}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&htmlValue, "value", "", "input")
+		c.Flags().StringVarP(&htmlValue, "value", "v", "", "input")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide --value")
 		}

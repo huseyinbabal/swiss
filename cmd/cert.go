@@ -28,7 +28,7 @@ var certInfoCmd = &cobra.Command{
 func init() {
 	subCommands := []*cobra.Command{certInfoCmd}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&certValue, "value", "", "PEM encoded certificate")
+		c.Flags().StringVarP(&certValue, "value", "v", "", "PEM encoded certificate")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide --value")
 		}

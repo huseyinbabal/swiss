@@ -54,7 +54,7 @@ var colorToHSLCmd = &cobra.Command{
 func init() {
 	subCommands := []*cobra.Command{colorToRGBCmd, colorToHexCmd, colorToHSLCmd}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&colorValue, "value", "", "input")
+		c.Flags().StringVarP(&colorValue, "value", "v", "", "input")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide --value")
 		}

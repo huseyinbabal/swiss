@@ -29,7 +29,7 @@ var rssToJsonCmd = &cobra.Command{
 }
 
 func init() {
-	rssToJsonCmd.Flags().StringVar(&rssValue, "value", "", "RSS string")
+	rssToJsonCmd.Flags().StringVarP(&rssValue, "value", "v", "", "RSS string")
 	if err := rssToJsonCmd.MarkFlagRequired("value"); err != nil {
 		log.Fatalf("Please provide a valid rss with --value parameter")
 	}

@@ -25,7 +25,7 @@ var textCountCmd = &cobra.Command{
 func init() {
 	subCommands := []*cobra.Command{textCountCmd}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&textValue, "value", "", "input")
+		c.Flags().StringVarP(&textValue, "value", "v", "", "input")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide --value")
 		}

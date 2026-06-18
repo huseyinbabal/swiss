@@ -25,7 +25,7 @@ var jqCmd = &cobra.Command{
 
 func init() {
 	jqCmd.Flags().StringVar(&jqPath, "path", "", "path")
-	jqCmd.Flags().StringVar(&jqValue, "value", "", "input")
+	jqCmd.Flags().StringVarP(&jqValue, "value", "v", "", "input")
 	if err := jqCmd.MarkFlagRequired("path"); err != nil {
 		panic("Please provide --path")
 	}

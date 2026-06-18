@@ -42,7 +42,7 @@ var sqlMinifyCmd = &cobra.Command{
 func init() {
 	subCommands := []*cobra.Command{sqlFormatCmd, sqlMinifyCmd}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&sqlValue, "value", "", "input")
+		c.Flags().StringVarP(&sqlValue, "value", "v", "", "input")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide --value")
 		}

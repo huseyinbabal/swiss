@@ -45,7 +45,7 @@ func init() {
 	if err := regexMatchCmd.MarkFlagRequired("pattern"); err != nil {
 		log.Fatalf("Please provide --pattern")
 	}
-	regexMatchCmd.Flags().StringVar(&regexValue, "value", "", "input")
+	regexMatchCmd.Flags().StringVarP(&regexValue, "value", "v", "", "input")
 	if err := regexMatchCmd.MarkFlagRequired("value"); err != nil {
 		log.Fatalf("Please provide --value")
 	}
@@ -54,7 +54,7 @@ func init() {
 	if err := regexReplaceCmd.MarkFlagRequired("pattern"); err != nil {
 		log.Fatalf("Please provide --pattern")
 	}
-	regexReplaceCmd.Flags().StringVar(&regexValue, "value", "", "input")
+	regexReplaceCmd.Flags().StringVarP(&regexValue, "value", "v", "", "input")
 	if err := regexReplaceCmd.MarkFlagRequired("value"); err != nil {
 		log.Fatalf("Please provide --value")
 	}
