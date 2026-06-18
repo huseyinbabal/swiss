@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"gopkg.in/yaml.v3"
 	"io"
 	"log"
 	"strings"
+	"swiss/internal/convert"
+
+	"gopkg.in/yaml.v3"
 )
 
 func Format(in string) (string, error) {
@@ -79,4 +81,30 @@ func ToJson(in string) (string, error) {
 		return "", fmt.Errorf("error occurred while marshalling into json %v", err)
 	}
 	return string(j), nil
+}
+
+// ToXML converts a YAML document into an indented XML document.
+func ToXML(in string) (string, error) {
+	obj, err := decode(in)
+	if err != nil {
+		return "", err
+	}
+	return convert.ObjectToXML(obj), nil
+}
+
+// ToCSV converts a YAML array of objects (or a single object) into CSV.
+func ToCSV(in string) (string, error) {
+	obj, err := decode(in)
+	if err != nil {
+		return "", err
+	}
+	return convert.ObjectToDelimited(obj, ',')
+}
+
+func decode(in string) (interface{}, error) {
+	var obj interface{}
+	if err := yaml.Unmarshal([]byte(in), &obj); err != nil {
+		return nil, fmt.Errorf("error occurred while unmarshalling yaml %v", err)
+	}
+	return obj, nil
 }
