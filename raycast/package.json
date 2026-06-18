@@ -36,6 +36,14 @@
       "description": "Generate UUIDs, passwords and lorem ipsum locally.",
       "mode": "view",
       "keywords": ["uuid", "password", "lorem", "generate", "random"]
+    },
+    {
+      "name": "qrcode",
+      "title": "Swiss QR Code",
+      "subtitle": "Swiss",
+      "description": "Turn a value or URL into a scannable QR code, then copy or save the image.",
+      "mode": "view",
+      "keywords": ["qr", "qrcode", "barcode", "encode"]
     }
   ],
   "preferences": [
