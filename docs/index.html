@@ -206,16 +206,14 @@
   .card.in{opacity:1;transform:none}
   .card:hover{transform:translateY(-4px);border-color:#39424e;box-shadow:var(--shadow)}
   .card h3{
-    margin:0;font-family:var(--mono);font-size:14.5px;font-weight:650;letter-spacing:-.2px;
-    color:var(--text);word-break:break-word;
+    margin:0;font-size:14px;font-weight:650;letter-spacing:-.1px;
+    color:var(--text);line-height:1.45;
   }
-  .card h3 .pfx{color:var(--accent-2)}
-  .card p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.5}
   .card .ex{
     position:relative;background:#0b0f14;border:1px solid var(--border-soft);border-radius:10px;
     padding:11px 40px 11px 12px;overflow:auto;
   }
-  .card .ex pre{margin:0;font-family:var(--mono);font-size:12.5px;color:#cdd6e0;white-space:pre}
+  .card .ex pre{margin:0;font-family:var(--mono);font-size:12.5px;color:#cdd6e0;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
   .card .ex .pfx{color:var(--accent-2)}
   .card .ex .mini{
     position:absolute;top:7px;right:7px;width:28px;height:28px;display:grid;place-items:center;
@@ -465,13 +463,6 @@ brew install swiss" aria-label="Copy install commands">
   /* ---------- helpers ---------- */
   function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
   // Render command title: first token "swiss" stays, render plainly with red "swiss" prefix
-  function titleHtml(cmd){
-    var firstSpace = cmd.indexOf(" ");
-    var head = firstSpace === -1 ? cmd : cmd.slice(0, firstSpace);
-    var rest = firstSpace === -1 ? "" : cmd.slice(firstSpace);
-    return '<span class="pfx">'+esc(head)+'</span>'+esc(rest);
-  }
-
   /* ---------- build catalog DOM ---------- */
   var catalog = document.getElementById("catalog");
   var allCards = [];
@@ -498,8 +489,7 @@ brew install swiss" aria-label="Copy install commands">
       card.setAttribute("data-search", (cmd + " " + desc).toLowerCase());
 
       card.innerHTML =
-        '<h3>'+titleHtml(cmd)+'</h3>'+
-        '<p>'+esc(desc)+'</p>'+
+        '<h3>'+esc(desc)+'</h3>'+
         '<div class="ex">'+
           '<button class="mini" type="button" aria-label="Copy command" title="Copy command">'+
             '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>'+
