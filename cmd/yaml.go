@@ -84,7 +84,7 @@ func init() {
 		yamlToCsvCmd,
 	}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&yamlValue, "value", "", "YAML string")
+		c.Flags().StringVarP(&yamlValue, "value", "v", "", "YAML string")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide a valid yaml with --value parameter")
 		}

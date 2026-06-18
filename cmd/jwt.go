@@ -42,7 +42,7 @@ var jwtVerifyCmd = &cobra.Command{
 func init() {
 	subCommands := []*cobra.Command{jwtDecodeCmd, jwtVerifyCmd}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&jwtValue, "value", "", "input")
+		c.Flags().StringVarP(&jwtValue, "value", "v", "", "input")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide --value")
 		}

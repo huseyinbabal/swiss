@@ -20,7 +20,7 @@ var slugCmd = &cobra.Command{
 }
 
 func init() {
-	slugCmd.Flags().StringVar(&slugValue, "value", "", "input")
+	slugCmd.Flags().StringVarP(&slugValue, "value", "v", "", "input")
 	if err := slugCmd.MarkFlagRequired("value"); err != nil {
 		log.Fatalf("Please provide --value")
 	}

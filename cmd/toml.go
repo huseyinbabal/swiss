@@ -51,7 +51,7 @@ var tomlFromJSONCmd = &cobra.Command{
 func init() {
 	subCommands := []*cobra.Command{tomlToJSONCmd, tomlToYAMLCmd, tomlFromJSONCmd}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&tomlValue, "value", "", "input")
+		c.Flags().StringVarP(&tomlValue, "value", "v", "", "input")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			panic("Please provide --value")
 		}

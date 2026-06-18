@@ -53,7 +53,7 @@ var uuidValidateCmd = &cobra.Command{
 func init() {
 	uuidGenCmd.Flags().IntVar(&uuidVersion, "version", 4, "uuid version (4 or 7)")
 
-	uuidValidateCmd.Flags().StringVar(&uuidValue, "value", "", "uuid to validate")
+	uuidValidateCmd.Flags().StringVarP(&uuidValue, "value", "v", "", "uuid to validate")
 	if err := uuidValidateCmd.MarkFlagRequired("value"); err != nil {
 		log.Fatalf("Please provide --value")
 	}

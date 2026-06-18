@@ -60,7 +60,7 @@ var hashCRC32Cmd = &cobra.Command{
 func init() {
 	subCommands := []*cobra.Command{hashMD5Cmd, hashSHA1Cmd, hashSHA256Cmd, hashSHA512Cmd, hashCRC32Cmd}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&hashValue, "value", "", "input")
+		c.Flags().StringVarP(&hashValue, "value", "v", "", "input")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide --value")
 		}

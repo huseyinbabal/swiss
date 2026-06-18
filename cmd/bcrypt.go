@@ -40,12 +40,12 @@ var bcryptVerifyCmd = &cobra.Command{
 }
 
 func init() {
-	bcryptHashCmd.Flags().StringVar(&bcryptValue, "value", "", "password to hash")
+	bcryptHashCmd.Flags().StringVarP(&bcryptValue, "value", "v", "", "password to hash")
 	if err := bcryptHashCmd.MarkFlagRequired("value"); err != nil {
 		log.Fatalf("Please provide --value")
 	}
 
-	bcryptVerifyCmd.Flags().StringVar(&bcryptValue, "value", "", "bcrypt hash")
+	bcryptVerifyCmd.Flags().StringVarP(&bcryptValue, "value", "v", "", "bcrypt hash")
 	bcryptVerifyCmd.Flags().StringVar(&bcryptPassword, "password", "", "password to verify")
 	if err := bcryptVerifyCmd.MarkFlagRequired("value"); err != nil {
 		log.Fatalf("Please provide --value")

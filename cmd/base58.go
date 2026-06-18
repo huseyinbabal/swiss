@@ -41,7 +41,7 @@ var base58DecodeCmd = &cobra.Command{
 func init() {
 	subCommands := []*cobra.Command{base58EncodeCmd, base58DecodeCmd}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&base58Value, "value", "", "input")
+		c.Flags().StringVarP(&base58Value, "value", "v", "", "input")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide --value")
 		}

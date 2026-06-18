@@ -88,7 +88,7 @@ func init() {
 		csvUnescapeCmd,
 	}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&csvValue, "value", "", "CSV string")
+		c.Flags().StringVarP(&csvValue, "value", "v", "", "CSV string")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide a valid csv with --value parameter")
 		}

@@ -54,7 +54,7 @@ var timeFromUnixCmd = &cobra.Command{
 func init() {
 	valueCommands := []*cobra.Command{timeToUnixCmd, timeFromUnixCmd}
 	for _, c := range valueCommands {
-		c.Flags().StringVar(&timeValue, "value", "", "input")
+		c.Flags().StringVarP(&timeValue, "value", "v", "", "input")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide --value")
 		}

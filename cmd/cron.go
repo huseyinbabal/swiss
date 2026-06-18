@@ -39,13 +39,13 @@ var cronNextCmd = &cobra.Command{
 }
 
 func init() {
-	cronExplainCmd.Flags().StringVar(&cronValue, "value", "", "input")
+	cronExplainCmd.Flags().StringVarP(&cronValue, "value", "v", "", "input")
 	if err := cronExplainCmd.MarkFlagRequired("value"); err != nil {
 		panic("Please provide --value")
 	}
 	cronCmd.AddCommand(cronExplainCmd)
 
-	cronNextCmd.Flags().StringVar(&cronValue, "value", "", "input")
+	cronNextCmd.Flags().StringVarP(&cronValue, "value", "v", "", "input")
 	cronNextCmd.Flags().IntVar(&cronCount, "count", 5, "number of times to show")
 	if err := cronNextCmd.MarkFlagRequired("value"); err != nil {
 		panic("Please provide --value")

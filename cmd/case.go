@@ -86,7 +86,7 @@ func init() {
 		caseLowerCmd,
 	}
 	for _, c := range subCommands {
-		c.Flags().StringVar(&caseValue, "value", "", "input")
+		c.Flags().StringVarP(&caseValue, "value", "v", "", "input")
 		if err := c.MarkFlagRequired("value"); err != nil {
 			log.Fatalf("Please provide --value")
 		}
