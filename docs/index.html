@@ -51,14 +51,19 @@
     border-radius:9px;
     background:linear-gradient(160deg,var(--accent-2),var(--accent));
     position:relative;flex:none;
+    display:grid;place-items:center;
     box-shadow:0 6px 16px -6px rgba(227,0,15,.7), inset 0 1px 0 rgba(255,255,255,.25);
   }
-  .logo::before,.logo::after{
-    content:"";position:absolute;background:#fff;border-radius:2px;
-    top:50%;left:50%;transform:translate(-50%,-50%);
+  .logo::before{
+    content:">_";
+    color:#fff;
+    font-family:var(--mono);
+    font-weight:800;
+    font-size:calc(var(--s) * .42);
+    line-height:1;
+    letter-spacing:-.04em;
+    transform:translateY(-4%);
   }
-  .logo::before{width:55%;height:17%}
-  .logo::after{width:17%;height:55%}
 
   /* ===== Header ===== */
   header.site{
