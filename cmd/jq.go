@@ -4,7 +4,7 @@ import (
 	"os"
 	"swiss/internal/jq"
 
-	"github.com/alecthomas/chroma/quick"
+	"github.com/alecthomas/chroma/v2/quick"
 	"github.com/spf13/cobra"
 )
 
