@@ -51,24 +51,44 @@ var yamlToJsonCmd = &cobra.Command{
 	},
 }
 
+var yamlToXmlCmd = &cobra.Command{
+	Use:   "toXML",
+	Short: "Converts yaml into XML",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		res, err := yaml.ToXML(yamlValue)
+		if err != nil {
+			return err
+		}
+		return quick.Highlight(os.Stdout, res, "xml", "terminal256", "monokai")
+	},
+}
+
+var yamlToCsvCmd = &cobra.Command{
+	Use:   "toCSV",
+	Short: "Converts a yaml array of objects into CSV",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		res, err := yaml.ToCSV(yamlValue)
+		if err != nil {
+			return err
+		}
+		return quick.Highlight(os.Stdout, res, "csv", "terminal256", "monokai")
+	},
+}
+
 func init() {
-	yamlBeautifyCmd.Flags().StringVar(&yamlValue, "value", "", "YAML string")
-	err := yamlBeautifyCmd.MarkFlagRequired("value")
-	if err != nil {
-		log.Fatalf("Please provide a valid yaml with --value parameter")
+	subCommands := []*cobra.Command{
+		yamlBeautifyCmd,
+		yamlToJsonCmd,
+		yamlFormatCmd,
+		yamlToXmlCmd,
+		yamlToCsvCmd,
 	}
-	yamlToJsonCmd.Flags().StringVar(&yamlValue, "value", "", "YAML string")
-	err = yamlToJsonCmd.MarkFlagRequired("value")
-	if err != nil {
-		log.Fatalf("Please provide a valid yaml with --value parameter")
+	for _, c := range subCommands {
+		c.Flags().StringVar(&yamlValue, "value", "", "YAML string")
+		if err := c.MarkFlagRequired("value"); err != nil {
+			log.Fatalf("Please provide a valid yaml with --value parameter")
+		}
+		yamlCmd.AddCommand(c)
 	}
-	yamlFormatCmd.Flags().StringVar(&yamlValue, "value", "", "YAML string")
-	err = yamlFormatCmd.MarkFlagRequired("value")
-	if err != nil {
-		log.Fatalf("Please provide a valid yaml with --value parameter")
-	}
-	yamlCmd.AddCommand(yamlBeautifyCmd)
-	yamlCmd.AddCommand(yamlToJsonCmd)
-	yamlCmd.AddCommand(yamlFormatCmd)
 	rootCmd.AddCommand(yamlCmd)
 }

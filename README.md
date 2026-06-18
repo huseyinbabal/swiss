@@ -14,43 +14,43 @@ brew install swiss
 More installation options will come
 
 # Todo
-- [ ] JSON
+- [x] JSON
   - [x] Beautify
   - [x] Uglify
   - [x] ToYAML
-  - [ ] ToXML
-  - [ ] ToCSV
-  - [ ] ToTSV
-  - [ ] Escape
-  - [ ] Unescape
-  - [ ] ToGoStruct
+  - [x] ToXML
+  - [x] ToCSV
+  - [x] ToTSV
+  - [x] Escape
+  - [x] Unescape
+  - [x] ToGoStruct
 - [x] Base64 
   - [x] Encode
   - [x] Decode
-- [ ] YAML
+- [x] YAML
   - [x] Format
   - [x] Beautify
   - [x] ToJSON
-  - [ ] ToXML
-  - [ ] ToCSV
+  - [x] ToXML
+  - [x] ToCSV
 - [x] Password
   - [x] Generator
 - [x] URL
   - [x] Encode
   - [x] Decode
-- [ ] XML
+- [x] XML
   - [x] ToJSON
   - [x] ToCSV
   - [x] ToYAML
-  - [ ] Escape
-  - [ ] Unescape
-  - [ ] Beautify
-  - [ ] Uglify
-- [ ] RSS
-  - [ ] ToJSON
-- [ ] CSV
-  - [ ] ToJSON
-  - [ ] ToXML
-  - [ ] ToYAML
-  - [ ] Escape
-  - [ ] Unescape
+  - [x] Escape
+  - [x] Unescape
+  - [x] Beautify
+  - [x] Uglify
+- [x] RSS
+  - [x] ToJSON
+- [x] CSV
+  - [x] ToJSON
+  - [x] ToXML
+  - [x] ToYAML
+  - [x] Escape
+  - [x] Unescape

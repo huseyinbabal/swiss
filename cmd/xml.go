@@ -1,11 +1,13 @@
 package cmd
 
 import (
-	"github.com/alecthomas/chroma/quick"
-	"github.com/spf13/cobra"
+	"fmt"
 	"log"
 	"os"
 	"swiss/internal/xml"
+
+	"github.com/alecthomas/chroma/quick"
+	"github.com/spf13/cobra"
 )
 
 var xmlValue string
@@ -50,24 +52,73 @@ var xmlToCsvCmd = &cobra.Command{
 	},
 }
 
+var xmlBeautifyCmd = &cobra.Command{
+	Use:   "beautify",
+	Short: "Beautifies XML with indentation",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		x, err := xml.Beautify(xmlValue)
+		if err != nil {
+			return err
+		}
+		return quick.Highlight(os.Stdout, x, "xml", "terminal256", "monokai")
+	},
+}
+
+var xmlUglifyCmd = &cobra.Command{
+	Use:   "uglify",
+	Short: "Removes insignificant whitespace from XML",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		x, err := xml.Uglify(xmlValue)
+		if err != nil {
+			return err
+		}
+		fmt.Println(x)
+		return nil
+	},
+}
+
+var xmlEscapeCmd = &cobra.Command{
+	Use:   "escape",
+	Short: "Escapes XML-significant characters",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		x, err := xml.Escape(xmlValue)
+		if err != nil {
+			return err
+		}
+		fmt.Println(x)
+		return nil
+	},
+}
+
+var xmlUnescapeCmd = &cobra.Command{
+	Use:   "unescape",
+	Short: "Unescapes XML entity references",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		x, err := xml.Unescape(xmlValue)
+		if err != nil {
+			return err
+		}
+		fmt.Println(x)
+		return nil
+	},
+}
+
 func init() {
-	xmlToJsonCmd.Flags().StringVar(&xmlValue, "value", "", "XML string")
-	err := xmlToJsonCmd.MarkFlagRequired("value")
-	if err != nil {
-		log.Fatalf("Please provide a valid xml with --value parameter")
+	subCommands := []*cobra.Command{
+		xmlToJsonCmd,
+		xmlToYamlCmd,
+		xmlToCsvCmd,
+		xmlBeautifyCmd,
+		xmlUglifyCmd,
+		xmlEscapeCmd,
+		xmlUnescapeCmd,
 	}
-	xmlToYamlCmd.Flags().StringVar(&xmlValue, "value", "", "XML string")
-	err = xmlToYamlCmd.MarkFlagRequired("value")
-	if err != nil {
-		log.Fatalf("Please provide a valid xml with --value parameter")
+	for _, c := range subCommands {
+		c.Flags().StringVar(&xmlValue, "value", "", "XML string")
+		if err := c.MarkFlagRequired("value"); err != nil {
+			log.Fatalf("Please provide a valid xml with --value parameter")
+		}
+		xmlCmd.AddCommand(c)
 	}
-	xmlToCsvCmd.Flags().StringVar(&xmlValue, "value", "", "XML string")
-	err = xmlToCsvCmd.MarkFlagRequired("value")
-	if err != nil {
-		log.Fatalf("Please provide a valid xml with --value parameter")
-	}
-	xmlCmd.AddCommand(xmlToJsonCmd)
-	xmlCmd.AddCommand(xmlToYamlCmd)
-	xmlCmd.AddCommand(xmlToCsvCmd)
 	rootCmd.AddCommand(xmlCmd)
 }

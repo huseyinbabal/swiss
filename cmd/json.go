@@ -52,24 +52,99 @@ var jsonToYamlCmd = &cobra.Command{
 	},
 }
 
+var jsonToXmlCmd = &cobra.Command{
+	Use:   "toXML",
+	Short: "Converts json to XML",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		res, err := json.ToXML(jsonValue)
+		if err != nil {
+			return err
+		}
+		return quick.Highlight(os.Stdout, res, "xml", "terminal256", "monokai")
+	},
+}
+
+var jsonToCsvCmd = &cobra.Command{
+	Use:   "toCSV",
+	Short: "Converts a json array of objects to CSV",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		res, err := json.ToCSV(jsonValue)
+		if err != nil {
+			return err
+		}
+		return quick.Highlight(os.Stdout, res, "csv", "terminal256", "monokai")
+	},
+}
+
+var jsonToTsvCmd = &cobra.Command{
+	Use:   "toTSV",
+	Short: "Converts a json array of objects to TSV",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		res, err := json.ToTSV(jsonValue)
+		if err != nil {
+			return err
+		}
+		fmt.Println(res)
+		return nil
+	},
+}
+
+var jsonToGoStructCmd = &cobra.Command{
+	Use:   "toGoStruct",
+	Short: "Generates a Go struct from json",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		res, err := json.ToGoStruct(jsonValue)
+		if err != nil {
+			return err
+		}
+		return quick.Highlight(os.Stdout, res, "go", "terminal256", "monokai")
+	},
+}
+
+var jsonEscapeCmd = &cobra.Command{
+	Use:   "escape",
+	Short: "Escapes a string into a json string literal",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		res, err := json.Escape(jsonValue)
+		if err != nil {
+			return err
+		}
+		fmt.Println(res)
+		return nil
+	},
+}
+
+var jsonUnescapeCmd = &cobra.Command{
+	Use:   "unescape",
+	Short: "Unescapes a json string literal",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		res, err := json.Unescape(jsonValue)
+		if err != nil {
+			return err
+		}
+		fmt.Println(res)
+		return nil
+	},
+}
+
 func init() {
-	jsonBeautifyCmd.Flags().StringVar(&jsonValue, "value", "", "JSON string")
-	err := jsonBeautifyCmd.MarkFlagRequired("value")
-	if err != nil {
-		log.Fatalf("Please provide a valid json with --value parameter")
+	subCommands := []*cobra.Command{
+		jsonBeautifyCmd,
+		jsonUglifyCmd,
+		jsonToYamlCmd,
+		jsonToXmlCmd,
+		jsonToCsvCmd,
+		jsonToTsvCmd,
+		jsonToGoStructCmd,
+		jsonEscapeCmd,
+		jsonUnescapeCmd,
 	}
-	jsonUglifyCmd.Flags().StringVar(&jsonValue, "value", "", "JSON string")
-	err = jsonUglifyCmd.MarkFlagRequired("value")
-	if err != nil {
-		log.Fatalf("Please provide a valid json with --value parameter")
+	for _, c := range subCommands {
+		c.Flags().StringVar(&jsonValue, "value", "", "JSON string")
+		if err := c.MarkFlagRequired("value"); err != nil {
+			log.Fatalf("Please provide a valid json with --value parameter")
+		}
+		jsonCmd.AddCommand(c)
 	}
-	jsonToYamlCmd.Flags().StringVar(&jsonValue, "value", "", "JSON string")
-	err = jsonToYamlCmd.MarkFlagRequired("value")
-	if err != nil {
-		log.Fatalf("Please provide a valid json with --value parameter")
-	}
-	jsonCmd.AddCommand(jsonBeautifyCmd)
-	jsonCmd.AddCommand(jsonUglifyCmd)
-	jsonCmd.AddCommand(jsonToYamlCmd)
 	rootCmd.AddCommand(jsonCmd)
 }
