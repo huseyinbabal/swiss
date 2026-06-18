@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>swiss — A Swiss Army knife for developers</title>
+<meta name="description" content="swiss is a local CLI of everyday conversions, encoding and text utilities. Your data never leaves your machine. No online services, no telemetry." />
+<style>
+  :root{
+    --bg:#0d1117;
+    --bg-soft:#11161d;
+    --panel:#161b22;
+    --panel-2:#1b222c;
+    --border:#262d38;
+    --border-soft:#21272f;
+    --text:#e6edf3;
+    --muted:#9aa6b2;
+    --muted-2:#6e7a87;
+    --accent:#e3000f;
+    --accent-2:#ff3b30;
+    --green:#3fb950;
+    --yellow:#e3b341;
+    --blue:#58a6ff;
+    --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "DejaVu Sans Mono", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", sans-serif;
+    --radius:14px;
+    --shadow: 0 10px 30px -12px rgba(0,0,0,.6), 0 2px 8px -2px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:
+      radial-gradient(900px 500px at 80% -10%, rgba(227,0,15,.14), transparent 60%),
+      radial-gradient(700px 500px at 0% 0%, rgba(88,166,255,.07), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:rgba(227,0,15,.35);color:#fff}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+
+  /* ===== Swiss cross logo ===== */
+  .logo{
+    --s:34px;
+    width:var(--s);height:var(--s);
+    border-radius:9px;
+    background:linear-gradient(160deg,var(--accent-2),var(--accent));
+    position:relative;flex:none;
+    box-shadow:0 6px 16px -6px rgba(227,0,15,.7), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .logo::before,.logo::after{
+    content:"";position:absolute;background:#fff;border-radius:2px;
+    top:50%;left:50%;transform:translate(-50%,-50%);
+  }
+  .logo::before{width:55%;height:17%}
+  .logo::after{width:17%;height:55%}
+
+  /* ===== Header ===== */
+  header.site{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:saturate(150%) blur(12px);
+    background:rgba(13,17,23,.82);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .nav{display:flex;align-items:center;gap:16px;height:64px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:.2px}
+  .brand .logo{--s:28px}
+  .brand b{font-size:18px}
+  .nav .links{display:flex;gap:6px;margin-left:6px}
+  .nav .links a{
+    padding:7px 11px;border-radius:9px;color:var(--muted);font-size:14px;font-weight:500;
+    transition:background .15s,color .15s;
+  }
+  .nav .links a:hover{background:var(--panel-2);color:var(--text)}
+  .nav .search{margin-left:auto;position:relative;flex:1;max-width:340px}
+  .nav .search input{
+    width:100%;padding:9px 12px 9px 36px;border-radius:10px;
+    background:var(--panel);border:1px solid var(--border);color:var(--text);
+    font-family:var(--sans);font-size:14px;outline:none;transition:border .15s, box-shadow .15s;
+  }
+  .nav .search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(227,0,15,.18)}
+  .nav .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted-2)}
+  .nav .gh{display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:10px;border:1px solid var(--border);background:var(--panel);font-size:13px;font-weight:600;color:var(--muted);transition:.15s}
+  .nav .gh:hover{color:var(--text);border-color:#3a434f}
+  @media(max-width:860px){.nav .links{display:none}.nav .gh span{display:none}}
+  @media(max-width:560px){.nav .search{max-width:none}}
+
+  /* ===== Hero ===== */
+  .hero{padding:74px 0 36px;text-align:center;position:relative}
+  .hero .badge{
+    display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;
+    color:var(--muted);background:var(--panel);border:1px solid var(--border);
+    padding:6px 13px;border-radius:999px;margin-bottom:24px;
+  }
+  .hero .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .wordmark{display:flex;align-items:center;justify-content:center;gap:18px;margin:0 0 14px}
+  .wordmark .logo{--s:56px}
+  .wordmark h1{
+    margin:0;font-size:clamp(52px,11vw,96px);font-weight:800;letter-spacing:-3px;line-height:1;
+    background:linear-gradient(180deg,#fff,#c9d2dc);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero .tag{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:620px;margin:0 auto 30px;font-weight:450}
+  .hero .tag b{color:var(--text);font-weight:650}
+
+  .install{
+    display:flex;align-items:center;gap:10px;max-width:430px;margin:0 auto;
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:6px 6px 6px 16px;box-shadow:var(--shadow);text-align:left;
+  }
+  .install pre{margin:0;font-family:var(--mono);font-size:14px;color:var(--text);overflow:auto;flex:1;white-space:pre}
+  .install .pfx{color:var(--accent-2);user-select:none}
+  .copybtn{
+    flex:none;display:inline-flex;align-items:center;gap:6px;
+    border:1px solid var(--border);background:var(--panel-2);color:var(--muted);
+    font-family:var(--sans);font-size:12.5px;font-weight:600;
+    padding:8px 11px;border-radius:9px;cursor:pointer;transition:.15s;
+  }
+  .copybtn:hover{color:var(--text);border-color:#3a434f;background:#222b36}
+  .copybtn.ok{color:var(--green);border-color:rgba(63,185,80,.4)}
+
+  /* ===== Terminal demo ===== */
+  .demo{padding:30px 0 20px}
+  .term{
+    max-width:760px;margin:0 auto;background:#0b0f14;border:1px solid var(--border);
+    border-radius:14px;overflow:hidden;box-shadow:var(--shadow);
+  }
+  .term .bar{
+    display:flex;align-items:center;gap:9px;padding:11px 14px;
+    background:linear-gradient(180deg,#1a212b,#141a22);border-bottom:1px solid var(--border);
+  }
+  .term .bar .lights{display:flex;gap:7px}
+  .term .bar .lights i{width:12px;height:12px;border-radius:50%;display:block}
+  .term .bar .lights i:nth-child(1){background:#ff5f57}
+  .term .bar .lights i:nth-child(2){background:#febc2e}
+  .term .bar .lights i:nth-child(3){background:#28c840}
+  .term .bar .title{flex:1;text-align:center;font-family:var(--mono);font-size:12.5px;color:var(--muted-2);margin-right:48px}
+  .term .body{
+    padding:18px 20px;font-family:var(--mono);font-size:14px;line-height:1.7;
+    min-height:230px;white-space:pre-wrap;word-break:break-word;
+  }
+  .term .line{display:block}
+  .term .prompt{color:var(--green);user-select:none}
+  .term .cmd{color:var(--text)}
+  .term .out{color:var(--muted);display:block;margin-top:2px}
+  .term .out .k{color:var(--blue)}
+  .term .out .ok{color:var(--green)}
+  .term .out .del{color:var(--accent-2)}
+  .term .out .add{color:var(--green)}
+  .cursor{display:inline-block;width:8px;height:16px;background:var(--accent-2);margin-left:1px;vertical-align:-2px;animation:blink 1.05s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ===== Stats ===== */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:40px 0 8px}
+  .stat{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center}
+  .stat .n{font-size:26px;font-weight:800;letter-spacing:-1px}
+  .stat .n.red{color:var(--accent-2)}
+  .stat .l{font-size:13px;color:var(--muted);margin-top:3px;font-weight:500}
+  @media(max-width:680px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+  /* ===== Sticky filter ===== */
+  .toolbar{
+    position:sticky;top:64px;z-index:40;padding:24px 0 14px;
+    background:linear-gradient(180deg,var(--bg) 65%,transparent);
+  }
+  .toolbar .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .filter{position:relative;flex:1;min-width:240px}
+  .filter input{
+    width:100%;padding:13px 14px 13px 42px;border-radius:12px;
+    background:var(--panel);border:1px solid var(--border);color:var(--text);
+    font-family:var(--mono);font-size:15px;outline:none;transition:.15s;
+  }
+  .filter input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(227,0,15,.18)}
+  .filter svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted-2)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chips a{padding:9px 13px;border-radius:10px;border:1px solid var(--border);background:var(--panel);font-size:13px;font-weight:600;color:var(--muted);transition:.15s}
+  .chips a:hover{color:var(--text);border-color:#3a434f}
+  .count{font-size:13px;color:var(--muted-2);font-family:var(--mono);padding-left:2px}
+
+  /* ===== Categories & cards ===== */
+  section.cat{padding:26px 0 6px;scroll-margin-top:140px}
+  .cat-head{display:flex;align-items:center;gap:12px;margin:0 0 18px}
+  .cat-head .ic{
+    width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+    background:var(--panel-2);border:1px solid var(--border);color:var(--accent-2);
+  }
+  .cat-head h2{margin:0;font-size:21px;letter-spacing:-.4px}
+  .cat-head .sub{color:var(--muted-2);font-size:13px;font-family:var(--mono)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--bg-soft));
+    border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px;
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease, opacity .5s ease;
+    opacity:1;
+  }
+  .card.reveal{opacity:0;transform:translateY(14px)}
+  .card.in{opacity:1;transform:none}
+  .card:hover{transform:translateY(-4px);border-color:#39424e;box-shadow:var(--shadow)}
+  .card h3{
+    margin:0;font-family:var(--mono);font-size:14.5px;font-weight:650;letter-spacing:-.2px;
+    color:var(--text);word-break:break-word;
+  }
+  .card h3 .pfx{color:var(--accent-2)}
+  .card p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.5}
+  .card .ex{
+    position:relative;background:#0b0f14;border:1px solid var(--border-soft);border-radius:10px;
+    padding:11px 40px 11px 12px;overflow:auto;
+  }
+  .card .ex pre{margin:0;font-family:var(--mono);font-size:12.5px;color:#cdd6e0;white-space:pre}
+  .card .ex .pfx{color:var(--accent-2)}
+  .card .ex .mini{
+    position:absolute;top:7px;right:7px;width:28px;height:28px;display:grid;place-items:center;
+    border-radius:8px;border:1px solid var(--border);background:var(--panel-2);color:var(--muted-2);
+    cursor:pointer;transition:.15s;
+  }
+  .card .ex .mini:hover{color:var(--text);border-color:#3a434f}
+  .card .ex .mini.ok{color:var(--green);border-color:rgba(63,185,80,.4)}
+  .card .out{
+    font-family:var(--mono);font-size:12px;color:var(--muted-2);
+    border-left:2px solid var(--border);padding-left:9px;white-space:pre-wrap;word-break:break-word;
+  }
+  .card .out::before{content:"→ ";color:var(--accent-2)}
+
+  .empty{display:none;text-align:center;color:var(--muted-2);font-family:var(--mono);padding:50px 0}
+  .empty.show{display:block}
+
+  /* ===== Footer ===== */
+  footer.site{margin-top:48px;border-top:1px solid var(--border-soft);padding:34px 0;background:var(--bg-soft)}
+  footer .row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  footer .brand b{font-size:15px}
+  footer .note{font-size:13px;color:var(--muted-2);font-family:var(--mono)}
+  footer a.gh{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;border:1px solid var(--border);background:var(--panel);font-size:13px;font-weight:600;color:var(--muted);transition:.15s}
+  footer a.gh:hover{color:var(--text);border-color:#3a434f}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .cursor{animation:none}
+    .card,.card.reveal{transition:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="#top"><span class="logo" aria-hidden="true"></span><b>swiss</b></a>
+    <nav class="links" aria-label="Categories">
+      <a href="#data">Data &amp; Config</a>
+      <a href="#crypto">Encoding &amp; Crypto</a>
+      <a href="#text">Text</a>
+      <a href="#web">Web &amp; Dev</a>
+    </nav>
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="navSearch" type="search" placeholder="Search commands…" aria-label="Search commands" autocomplete="off" />
+    </div>
+    <a class="gh" href="https://github.com/huseyinbabal/swiss" target="_blank" rel="noopener" aria-label="View swiss on GitHub">
+      <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>GitHub</span>
+    </a>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="badge"><span class="dot"></span> 100% offline · no telemetry</span>
+      <div class="wordmark">
+        <span class="logo" aria-hidden="true"></span>
+        <h1>swiss</h1>
+      </div>
+      <p class="tag">A Swiss Army knife for developers — <b>your data never leaves your machine.</b></p>
+      <div class="install">
+        <pre><span class="pfx">$ </span><span id="installText">brew tap huseyinbabal/tap
+$ brew install swiss</span></pre>
+        <button class="copybtn" id="installCopy" data-copy="brew tap huseyinbabal/tap
+brew install swiss" aria-label="Copy install commands">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>
+          <span>Copy</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TERMINAL DEMO -->
+  <section class="demo">
+    <div class="wrap">
+      <div class="term" role="img" aria-label="Animated terminal demonstrating swiss commands">
+        <div class="bar">
+          <div class="lights"><i></i><i></i><i></i></div>
+          <div class="title">zsh — swiss</div>
+        </div>
+        <div class="body" id="termBody"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="wrap">
+    <div class="stats">
+      <div class="stat"><div class="n red">75+</div><div class="l">commands</div></div>
+      <div class="stat"><div class="n">100%</div><div class="l">offline</div></div>
+      <div class="stat"><div class="n">No</div><div class="l">telemetry</div></div>
+      <div class="stat"><div class="n">Single</div><div class="l">binary</div></div>
+    </div>
+  </section>
+
+  <!-- TOOLBAR / FILTER -->
+  <div class="toolbar">
+    <div class="wrap">
+      <div class="row">
+        <div class="filter">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="filter" type="search" placeholder="Filter commands by name or description…" aria-label="Filter commands" autocomplete="off" />
+        </div>
+        <div class="chips">
+          <a href="#data">Data</a>
+          <a href="#crypto">Crypto</a>
+          <a href="#text">Text</a>
+          <a href="#web">Web</a>
+        </div>
+        <span class="count" id="count"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMAND REFERENCE -->
+  <div class="wrap">
+    <div id="catalog"></div>
+    <div class="empty" id="empty">No commands match your search.</div>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap row">
+    <a class="brand" href="#top" style="display:flex;align-items:center;gap:10px"><span class="logo" aria-hidden="true"></span><b>swiss</b></a>
+    <span class="note">Generated commands run 100% locally.</span>
+    <a class="gh" href="https://github.com/huseyinbabal/swiss" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>github.com/huseyinbabal/swiss</span>
+    </a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Command catalog data ---------- */
+  var CATEGORIES = [
+    {
+      id:"data", title:"Data & Config",
+      sub:"json · yaml · xml · csv · toml · jq · rss",
+      icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>',
+      cmds:[
+        ["swiss json beautify --value '{\"name\":\"ada\",\"age\":36}'","Pretty-print JSON.","{\n  \"age\": 36,\n  \"name\": \"ada\"\n}"],
+        ["swiss json uglify --value '{ \"a\": 1 }'","Minify JSON.","{\"a\":1}"],
+        ["swiss json toYAML --value '{\"name\":\"ada\"}'","JSON → YAML.","name: ada"],
+        ["swiss json toXML --value '{\"name\":\"ada\",\"tags\":[\"a\",\"b\"]}'","JSON → XML.","<root>…<tags>a</tags><tags>b</tags></root>"],
+        ["swiss json toCSV --value '[{\"name\":\"ada\",\"age\":36},{\"name\":\"bob\"}]'","JSON array → CSV.","age,name\n36,ada\n,bob"],
+        ["swiss json toTSV --value '[{\"a\":1,\"b\":2}]'","JSON array → TSV.","a\tb\n1\t2"],
+        ["swiss json toGoStruct --value '{\"first_name\":\"ada\",\"age\":36}'","Generate a Go struct from JSON.","type AutoGenerated struct { … }"],
+        ["swiss json escape --value 'He said \"hi\"'","Escape into a JSON string.","He said \\\"hi\\\""],
+        ["swiss json unescape --value 'He said \\\"hi\\\"'","Unescape a JSON string.","He said \"hi\""],
+        ["swiss yaml format --value 'a: 1'","Format YAML.","a: 1"],
+        ["swiss yaml beautify --value '{a: 1, b: 2}'","Beautify flow YAML.","a: 1\nb: 2"],
+        ["swiss yaml toJson --value 'name: ada'","YAML → JSON.","{\"name\":\"ada\"}"],
+        ["swiss yaml toXML --value 'name: ada'","YAML → XML.","<root><name>ada</name></root>"],
+        ["swiss yaml toCSV --value '- name: ada\\n- name: bob'","YAML → CSV.","name\nada\nbob"],
+        ["swiss xml toJSON --value '<a><b>1</b></a>'","XML → JSON.","{\"a\":{\"b\":\"1\"}}"],
+        ["swiss xml toYAML --value '<a><b>1</b></a>'","XML → YAML.","a:\n  b: \"1\""],
+        ["swiss xml toCSV --value '<rows><row><a>1</a></row></rows>'","XML → CSV.","a\n1"],
+        ["swiss xml beautify --value '<a><b>1</b></a>'","Indent XML.","<a>\n    <b>1</b>\n</a>"],
+        ["swiss xml uglify --value '<a>\\n <b>1</b>\\n</a>'","Strip XML whitespace.","<a><b>1</b></a>"],
+        ["swiss xml escape --value '<a> & \"b\"'","Escape XML.","&lt;a&gt; &amp; &quot;b&quot;"],
+        ["swiss xml unescape --value '&lt;a&gt;'","Unescape XML.","<a>"],
+        ["swiss csv toJSON --value 'name,age\\nada,36'","CSV → JSON.","[{\"age\":\"36\",\"name\":\"ada\"}]"],
+        ["swiss csv toXML --value 'a,b\\n1,2'","CSV → XML.","<root><item><a>1</a><b>2</b></item></root>"],
+        ["swiss csv toYAML --value 'name,age\\nada,36'","CSV → YAML.","- age: \"36\"\n  name: ada"],
+        ["swiss csv escape --value 'a,b \"c\"'","Escape a CSV field.","\"a,b \"\"c\"\"\""],
+        ["swiss csv unescape --value '\"a,b \"\"c\"\"\"'","Unescape a CSV field.","a,b \"c\""],
+        ["swiss toml toJSON --value 'title = \"x\"'","TOML → JSON.","{ \"title\": \"x\" }"],
+        ["swiss toml toYAML --value 'title = \"x\"'","TOML → YAML.","title: x"],
+        ["swiss toml fromJSON --value '{\"title\":\"x\"}'","JSON → TOML.","title = \"x\""],
+        ["swiss jq --path 'a.b[1]' --value '{\"a\":{\"b\":[10,20]}}'","Query JSON by path.","20"],
+        ["swiss rss toJSON --value '<rss><channel><title>Feed</title></channel></rss>'","RSS → JSON.","{\"rss\":{\"channel\":{\"title\":\"Feed\"}}}"]
+      ]
+    },
+    {
+      id:"crypto", title:"Encoding & Crypto",
+      sub:"base64 · base58 · hex · hash · bcrypt · jwt · gzip · uuid · cert",
+      icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+      cmds:[
+        ["swiss base64 encode --value hello","Base64 encode.","aGVsbG8="],
+        ["swiss base64 decode --value aGVsbG8=","Base64 decode.","hello"],
+        ["swiss base58 encode --value hello","Base58 encode.","Cn8eVZg"],
+        ["swiss base58 decode --value Cn8eVZg","Base58 decode.","hello"],
+        ["swiss hex encode --value hi","Hex encode.","6869"],
+        ["swiss hex decode --value 6869","Hex decode.","hi"],
+        ["swiss hash sha256 --value foo","SHA-256 (also md5/sha1/sha512/crc32).","2c26b46b68ffc6…"],
+        ["swiss bcrypt hash --value pass123","Bcrypt hash a password.","$2a$10$zOlo…"],
+        ["swiss bcrypt verify --value '$2a$10$…' --password pass123","Verify a bcrypt hash.","match"],
+        ["swiss jwt decode --value <token>","Decode a JWT (header, payload, expiry).","Header… Payload… Expires…"],
+        ["swiss jwt verify --value <token> --secret secret","Verify HS256 signature.","valid"],
+        ["swiss gzip compress --value \"hello hello hello\"","Gzip + base64.","H4sIAAAA…"],
+        ["swiss gzip decompress --value H4sIAAAA…","Un-gzip.","hello hello hello"],
+        ["swiss uuid gen --version 4","Generate a UUID (v4 or v7).","23c3b0e9-5428-49a6-…"],
+        ["swiss uuid validate --value 23c3b0e9-5428-49a6-9996-71bc3bcf360e","Validate a UUID.","valid"],
+        ["swiss cert info --value \"$(cat cert.pem)\"","Inspect an x509/PEM certificate.","Subject… DNS SANs… Not After…"]
+      ]
+    },
+    {
+      id:"text", title:"Text",
+      sub:"count · case · slug · lorem · diff · regex · html · sql",
+      icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V5h16v2"/><path d="M9 19h6"/><path d="M12 5v14"/></svg>',
+      cmds:[
+        ["swiss text count --value \"hello world foo\"","Count chars/words/lines + reading time.","Words: 3 …"],
+        ["swiss case snake --value HelloWorld","Convert case (camel/pascal/snake/kebab/title/upper/lower).","hello_world"],
+        ["swiss case camel --value hello_world","camelCase.","helloWorld"],
+        ["swiss slug --value \"Hello World! 123\"","URL slug.","hello-world-123"],
+        ["swiss lorem --words 6","Lorem ipsum (also --sentences / --paragraphs).","lorem ipsum dolor sit amet consectetur"],
+        ["swiss diff --a $'x\\ny\\nz' --b $'x\\nY\\nz'","Line diff of two strings.","  x\n- y\n+ Y\n  z"],
+        ["swiss regex match --pattern '(\\w+)@(\\w+)' --value 'a@b'","Test a regex, show groups.","match 1: \"a@b\" group 1: \"a\"…"],
+        ["swiss regex replace --pattern a --value banana --replacement o","Regex replace.","bonono"],
+        ["swiss html escape --value '<a>&'","HTML escape.","&lt;a&gt;&amp;"],
+        ["swiss html unescape --value '&lt;a&gt;'","HTML unescape.","<a>"],
+        ["swiss html strip --value '<b>hi</b> there'","Strip HTML tags.","hi there"],
+        ["swiss sql format --value 'select a from t where x=1'","Pretty-print SQL.","SELECT a\nFROM t\nWHERE x=1"],
+        ["swiss sql minify --value 'select   a\\nfrom t'","Minify SQL.","select a from t"]
+      ]
+    },
+    {
+      id:"web", title:"Web & Dev",
+      sub:"url · password · ip · cron · color · time",
+      icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+      cmds:[
+        ["swiss url encode --url \"hello world&x=1\"","URL-encode (note: uses --url).","hello+world%26x%3D1"],
+        ["swiss url decode --url \"hello%20world\"","URL-decode.","hello world"],
+        ["swiss password generate --length 16 --include-upper --include-numeric --include-symbol","Generate a password locally.","f3$Kd9!aZ…"],
+        ["swiss ip cidr --value 192.168.1.0/24","Subnet/CIDR info.","Network 192.168.1.0 … Broadcast 192.168.1.255"],
+        ["swiss ip toInt --value 10.0.0.1","IPv4 → integer.","167772161"],
+        ["swiss ip fromInt --value 167772161","Integer → IPv4.","10.0.0.1"],
+        ["swiss cron explain --value '*/5 * * * *'","Explain a cron expression.","Minute: every 5 …"],
+        ["swiss cron next --value '* * * * *' --count 3","Next N run times.","2026-06-18T11:40:00…"],
+        ["swiss color toRGB --value '#ff8800'","Hex → RGB.","rgb(255, 136, 0)"],
+        ["swiss color toHex --value 'rgb(255,0,0)'","RGB → hex.","#ff0000"],
+        ["swiss color toHSL --value '#ff0000'","Hex → HSL.","hsl(0, 100%, 50%)"],
+        ["swiss time now","Current time (unix + ISO).","Unix: … ISO: …"],
+        ["swiss time toUnix --value '2026-06-18'","Date → unix.","1781740800"],
+        ["swiss time fromUnix --value 0","Unix → ISO.","1970-01-01T00:00:00Z"]
+      ]
+    }
+  ];
+
+  /* ---------- helpers ---------- */
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  // Render command title: first token "swiss" stays, render plainly with red "swiss" prefix
+  function titleHtml(cmd){
+    var firstSpace = cmd.indexOf(" ");
+    var head = firstSpace === -1 ? cmd : cmd.slice(0, firstSpace);
+    var rest = firstSpace === -1 ? "" : cmd.slice(firstSpace);
+    return '<span class="pfx">'+esc(head)+'</span>'+esc(rest);
+  }
+
+  /* ---------- build catalog DOM ---------- */
+  var catalog = document.getElementById("catalog");
+  var allCards = [];
+
+  CATEGORIES.forEach(function(cat){
+    var sec = document.createElement("section");
+    sec.className = "cat";
+    sec.id = cat.id;
+
+    var head = document.createElement("div");
+    head.className = "cat-head";
+    head.innerHTML =
+      '<span class="ic" aria-hidden="true">'+cat.icon+'</span>'+
+      '<div><h2>'+esc(cat.title)+'</h2><div class="sub">'+esc(cat.sub)+'</div></div>';
+    sec.appendChild(head);
+
+    var grid = document.createElement("div");
+    grid.className = "grid";
+
+    cat.cmds.forEach(function(c){
+      var cmd = c[0], desc = c[1], out = c[2];
+      var card = document.createElement("article");
+      card.className = "card reveal";
+      card.setAttribute("data-search", (cmd + " " + desc).toLowerCase());
+
+      card.innerHTML =
+        '<h3>'+titleHtml(cmd)+'</h3>'+
+        '<p>'+esc(desc)+'</p>'+
+        '<div class="ex">'+
+          '<button class="mini" type="button" aria-label="Copy command" title="Copy command">'+
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>'+
+          '</button>'+
+          '<pre><span class="pfx">$ </span>'+esc(cmd)+'</pre>'+
+        '</div>'+
+        '<div class="out">'+esc(out)+'</div>';
+
+      // wire copy
+      (function(card, cmd){
+        var btn = card.querySelector(".mini");
+        btn.addEventListener("click", function(){ copyText(cmd, btn, true); });
+      })(card, cmd);
+
+      grid.appendChild(card);
+      allCards.push({el:card, text:(cmd+" "+desc).toLowerCase()});
+    });
+
+    sec.appendChild(grid);
+    catalog.appendChild(sec);
+  });
+
+  /* ---------- copy to clipboard ---------- */
+  function copyText(text, btn, iconOnly){
+    var done = function(){
+      btn.classList.add("ok");
+      var label = btn.querySelector("span");
+      var prev = label ? label.textContent : null;
+      if(label) label.textContent = "Copied!";
+      else if(!iconOnly) btn.textContent = "Copied!";
+      setTimeout(function(){
+        btn.classList.remove("ok");
+        if(label && prev !== null) label.textContent = prev;
+      }, 1300);
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done, function(){ fallback(text); done(); });
+    } else { fallback(text); done(); }
+  }
+  function fallback(text){
+    try{
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.select();
+      document.execCommand("copy"); document.body.removeChild(ta);
+    }catch(e){}
+  }
+
+  // hero install copy
+  var installBtn = document.getElementById("installCopy");
+  installBtn.addEventListener("click", function(){
+    copyText(installBtn.getAttribute("data-copy"), installBtn, false);
+  });
+
+  /* ---------- live filtering ---------- */
+  var filterInput = document.getElementById("filter");
+  var navSearch = document.getElementById("navSearch");
+  var emptyEl = document.getElementById("empty");
+  var countEl = document.getElementById("count");
+  var total = allCards.length;
+
+  function applyFilter(q){
+    q = (q||"").trim().toLowerCase();
+    var visible = 0;
+    allCards.forEach(function(c){
+      var show = !q || c.text.indexOf(q) !== -1;
+      c.el.style.display = show ? "" : "none";
+      if(show) visible++;
+    });
+    // hide empty category sections
+    CATEGORIES.forEach(function(cat){
+      var sec = document.getElementById(cat.id);
+      var anyVisible = Array.prototype.some.call(sec.querySelectorAll(".card"), function(el){
+        return el.style.display !== "none";
+      });
+      sec.style.display = anyVisible ? "" : "none";
+    });
+    emptyEl.classList.toggle("show", visible === 0);
+    countEl.textContent = q ? (visible + " / " + total + " commands") : (total + " commands");
+  }
+  function syncFilter(e){
+    var v = e.target.value;
+    if(e.target === filterInput) navSearch.value = v;
+    else filterInput.value = v;
+    applyFilter(v);
+  }
+  filterInput.addEventListener("input", syncFilter);
+  navSearch.addEventListener("input", syncFilter);
+  applyFilter("");
+
+  /* ---------- IntersectionObserver reveal ---------- */
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce || !("IntersectionObserver" in window)){
+    allCards.forEach(function(c){ c.el.classList.remove("reveal"); c.el.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, {threshold:0.08, rootMargin:"0px 0px -40px 0px"});
+    allCards.forEach(function(c){ io.observe(c.el); });
+  }
+
+  /* ---------- Animated terminal ---------- */
+  var DEMOS = [
+    {cmd:"swiss jwt decode --value eyJhbGci…",
+     out:'<span class="k">Header</span>:  {"alg":"HS256","typ":"JWT"}\n<span class="k">Payload</span>: {"sub":"1234","name":"Ada","admin":true}\n<span class="k">Expires</span>: 2026-09-01T12:00:00Z'},
+    {cmd:"swiss json toYAML --value '{\"name\":\"ada\",\"age\":36}'",
+     out:'name: ada\nage: 36'},
+    {cmd:"swiss diff --a $'x\\ny\\nz' --b $'x\\nY\\nz'",
+     out:'  x\n<span class="del">- y</span>\n<span class="add">+ Y</span>\n  z'},
+    {cmd:"swiss ip cidr --value 192.168.1.0/24",
+     out:'Network:   192.168.1.0\nBroadcast: 192.168.1.255\nHosts:     254'},
+    {cmd:"swiss color toHSL --value '#ff0000'",
+     out:'hsl(0, 100%, 50%)'},
+    {cmd:"swiss uuid gen --version 4",
+     out:'23c3b0e9-5428-49a6-9996-71bc3bcf360e'},
+    {cmd:"swiss cron next --value '* * * * *' --count 3",
+     out:'2026-06-18T11:40:00Z\n2026-06-18T11:41:00Z\n2026-06-18T11:42:00Z'},
+    {cmd:"swiss hash sha256 --value foo",
+     out:'2c26b46b68ffc68ff99b453c1d304134\n13422d706483bfa0f98a5e886266e7ae'}
+  ];
+
+  var body = document.getElementById("termBody");
+
+  function renderStatic(){
+    var html = "";
+    DEMOS.forEach(function(d){
+      html += '<span class="line"><span class="prompt">$ </span><span class="cmd">'+esc(d.cmd)+'</span></span>';
+      html += '<span class="out">'+d.out+'</span>';
+    });
+    body.innerHTML = html;
+  }
+
+  if(reduce){
+    renderStatic();
+  } else {
+    var idx = 0;
+    function typeDemo(){
+      var d = DEMOS[idx];
+      var cmd = d.cmd;
+      body.innerHTML =
+        '<span class="line"><span class="prompt">$ </span><span class="cmd" id="typed"></span><span class="cursor" id="cur"></span></span>';
+      var typed = document.getElementById("typed");
+      var i = 0;
+      function step(){
+        if(i <= cmd.length){
+          typed.textContent = cmd.slice(0, i);
+          i++;
+          // slight variance for natural feel
+          var delay = 26 + Math.random()*42;
+          setTimeout(step, delay);
+        } else {
+          // pause, then reveal output
+          setTimeout(function(){
+            var cur = document.getElementById("cur");
+            if(cur) cur.remove();
+            var out = document.createElement("span");
+            out.className = "out";
+            out.innerHTML = d.out;
+            body.appendChild(out);
+            // pause showing output, then next
+            setTimeout(function(){
+              idx = (idx + 1) % DEMOS.length;
+              typeDemo();
+            }, 2400);
+          }, 420);
+        }
+      }
+      step();
+    }
+    // initial small delay
+    setTimeout(typeDemo, 600);
+  }
+})();
+</script>
+</body>
+</html>
